@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/temp-whisper-build.yml'
+  pull_request:
   workflow_dispatch:
 
 permissions:

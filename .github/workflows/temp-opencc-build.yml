@@ -1,0 +1,28 @@
+name: Temporary OpenCC Build
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install and package OpenCC
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y opencc
+          mkdir -p bundle/usr/bin bundle/usr/share
+          cp /usr/bin/opencc bundle/usr/bin/
+          cp -r /usr/share/opencc bundle/usr/share/
+          cp /usr/lib/x86_64-linux-gnu/libopencc.so* bundle/usr/bin/ || true
+          tar -C bundle -czf opencc-linux-x64.tar.gz .
+      - name: Upload bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: opencc-local-bundle
+          path: opencc-linux-x64.tar.gz
+          retention-days: 1
